@@ -1,7 +1,7 @@
 package com.example.raphaelkawabata.popularmovies;
 
-import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,15 +11,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
+import com.example.raphaelkawabata.popularmovies.Network.InternetConnection;
+import com.example.raphaelkawabata.popularmovies.databinding.ActivityMainBinding;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -31,7 +28,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     public ArrayList<String> posterPathList = new ArrayList<>();
     public int currentPage = 1;
     public int index = 0;
+    ActivityMainBinding binding;
     String completeUrlMainPage;
+    VolleyInterface mVolleyCallback = null;
+    InternetConnection mInternetConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +40,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
         completeUrlMainPage = updateUrl(null, currentPage);
 
-        setContentView(R.layout.activity_main);
-
-        requestJsonObject(this, completeUrlMainPage);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        initVolleyCallback();
+        mInternetConnection = new InternetConnection(mVolleyCallback, this);
+        mInternetConnection.requestJsonObject(this, completeUrlMainPage);
     }
 
     @Override
@@ -61,52 +62,24 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
             urlCategory = "popular";
             Log.i("MainActivity", "onOptionsItemSelected: change urlCategory to " + urlCategory);
             completeUrlMainPage = updateUrl(urlCategory, 1);
-            requestJsonObject(this, completeUrlMainPage);
+            movieList.clear();
+            posterPathList.clear();
+            mInternetConnection = new InternetConnection(mVolleyCallback, this);
+            mInternetConnection.requestJsonObject(this, completeUrlMainPage);
+            ;
             return true;
         } else if (itemSelected == R.id.sort_top_rated) {
             urlCategory = "top_rated";
             Log.i("MainActivity", "onOptionsItemSelected: change urlCategory to " + urlCategory);
             completeUrlMainPage = updateUrl(urlCategory, 1);
-            requestJsonObject(this, completeUrlMainPage);
+            movieList.clear();
+            posterPathList.clear();
+            mInternetConnection = new InternetConnection(mVolleyCallback, this);
+            mInternetConnection.requestJsonObject(this, completeUrlMainPage);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void requestJsonObject(final Context context, String url) {
-
-        RequestQueue requestQueue = Volley.newRequestQueue(context.getApplicationContext());
-
-        movieList.clear();
-        posterPathList.clear();
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            Gson gson = new Gson();
-                            ArrayList<String> poster_path = new ArrayList<>();
-                            JSONArray jsonArray = response.getJSONArray("results");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject movieJsonObject = jsonArray.getJSONObject(i);
-                                MovieInformation jsonObjectString = gson.fromJson(movieJsonObject.toString(), MovieInformation.class);
-                                movieList.add(jsonObjectString);
-                                poster_path.add(movieList.get(i).getPosterPath());
-                            }
-                            initView(poster_path);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                });
-        requestQueue.add(request);
     }
 
     private void initView(ArrayList<String> posterPath) {
@@ -135,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
         String updatedUrl;
         currentPage = 1;
-        String apiKey = "&api_key=";
+        String apiKey = "&api_key";
         String page = "?page=";
         String url = "https://api.themoviedb.org/3/movie/";
         if (category == null) {
@@ -157,4 +130,35 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         startActivity(intentStartMovieDetailActivity);
     }
 
+    void initVolleyCallback() {
+        mVolleyCallback = new VolleyInterface() {
+            @Override
+            public void onSuccess(JSONObject movieJsonObject) {
+                Gson gson = new Gson();
+                ArrayList<String> poster_path = new ArrayList<>();
+                JSONArray jsonArray = null;
+                try {
+                    jsonArray = movieJsonObject.getJSONArray("results");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    try {
+                        movieJsonObject = jsonArray.getJSONObject(i);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    MovieInformation jsonObjectString = gson.fromJson(movieJsonObject.toString(), MovieInformation.class);
+                    movieList.add(jsonObjectString);
+                    poster_path.add(movieList.get(i).getPosterPath());
+                }
+                initView(poster_path);
+            }
+
+            @Override
+            public void onFail(String msg) {
+
+            }
+        };
+    }
 }

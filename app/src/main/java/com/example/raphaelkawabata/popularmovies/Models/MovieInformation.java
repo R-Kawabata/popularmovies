@@ -1,4 +1,4 @@
-package com.example.raphaelkawabata.popularmovies;
+package com.example.raphaelkawabata.popularmovies.Models;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
@@ -47,26 +47,6 @@ public class MovieInformation extends BaseObservable implements Parcelable {
     private String isAdult;
     @SerializedName("overview")
     private String overview;
-
-    //    public MovieInformation(String voteCount, String id, String video, String voteAverage,
-//                            String title, String popularity, String posterPath, String originalLanguage,
-//                            String originalTitle, String genreIds, String backdropPath, String isAdult,
-//                            String overview, String releaseDate) {
-//        this.setVoteCount(voteCount);
-//        this.setId(id);
-//        this.setVoteAverage(voteAverage);
-//        this.setVideo(video);
-//        this.setTitle(title);
-//        this.setPopularity(popularity);
-//        this.setPosterPath(posterPath);
-//        this.setOriginalLanguage(originalLanguage);
-//        this.setOriginalTitle(originalTitle);
-//        this.setIds(genreIds);
-//        this.setBackdropPath(backdropPath);
-//        this.setAdult(isAdult);
-//        this.setOverview(overview);
-//        this.setReleaseDate(releaseDate);
-//    }
     @SerializedName("release_date")
     private String releaseDate;
 
@@ -87,6 +67,9 @@ public class MovieInformation extends BaseObservable implements Parcelable {
         this.isAdult = data[11];
         this.overview = data[12];
         this.releaseDate = data[13];
+    }
+
+    public MovieInformation() {
     }
 
     @Bindable

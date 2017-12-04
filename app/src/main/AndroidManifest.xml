@@ -14,6 +14,7 @@
         android:theme="@style/Theme.AppCompat">
         <activity
             android:name=".MainActivity"
+            android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,11 +25,21 @@
         <activity
             android:name=".MovieDetailsActivity"
             android:label="Movie Detail"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="adjustUnspecified|adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
+        <activity
+            android:name=".FavoriteMovieActivity"
+            android:label="@string/favorite_movie"
+            android:parentActivityName=".MainActivity"></activity>
+
+        <provider
+            android:name=".Data.FavoriteContentProvider"
+            android:authorities="com.example.raphaelkawabata.popularmovies"
+            android:exported="false" />
     </application>
 
 </manifest>

@@ -50,11 +50,11 @@ public class DateParser extends MovieDetailsActivity {
                 dateArray[1] = "December";
                 break;
         }
-        if (day == 1 || day % 10 == 2) {
+        if (day == 1 || day % 20 == 1 || day % 30 == 1) {
             dateArray[2] = day + "st";
-        } else if (day == 2 || day % 10 == 2) {
+        } else if (day == 2 || day % 20 == 2) {
             dateArray[2] = day + "nd";
-        } else if (day == 3 || day % 10 == 3) {
+        } else if (day == 3) {
             dateArray[2] = day + "rd";
         } else {
             dateArray[2] = day + "th";

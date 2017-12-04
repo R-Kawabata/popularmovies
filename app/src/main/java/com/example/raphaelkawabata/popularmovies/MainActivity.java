@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.raphaelkawabata.popularmovies.Adapter.RecyclerViewAdapter;
+import com.example.raphaelkawabata.popularmovies.Models.MovieInformation;
 import com.example.raphaelkawabata.popularmovies.Network.InternetConnection;
 import com.example.raphaelkawabata.popularmovies.databinding.ActivityMainBinding;
 import com.google.gson.Gson;
@@ -32,14 +34,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     String completeUrlMainPage;
     VolleyInterface mVolleyCallback = null;
     InternetConnection mInternetConnection;
+    LinearLayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-
-        completeUrlMainPage = updateUrl(null, currentPage);
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         initVolleyCallback();
         mInternetConnection = new InternetConnection(mVolleyCallback, this);
@@ -56,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int itemSelected = item.getItemId();
-        String completeUrlMainPage;
         String urlCategory;
         if (itemSelected == R.id.sort_popular) {
             urlCategory = "popular";
@@ -66,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
             posterPathList.clear();
             mInternetConnection = new InternetConnection(mVolleyCallback, this);
             mInternetConnection.requestJsonObject(this, completeUrlMainPage);
-            ;
+            setTitle("Popular");
             return true;
         } else if (itemSelected == R.id.sort_top_rated) {
             urlCategory = "top_rated";
@@ -76,7 +74,12 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
             posterPathList.clear();
             mInternetConnection = new InternetConnection(mVolleyCallback, this);
             mInternetConnection.requestJsonObject(this, completeUrlMainPage);
+            setTitle("Top Rated");
             return true;
+        } else if (itemSelected == R.id.favorite_movie) {
+            Intent intentStartFavoriteActivity = new Intent(this, FavoriteMovieActivity.class);
+            startActivity(intentStartFavoriteActivity);
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -86,18 +89,17 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
         if (posterPath.get(0) != null) {
             posterPathList.addAll(posterPath);
-            RecyclerView recyclerView = (RecyclerView) findViewById(R.id.grid_recyclerview);
+            RecyclerView recyclerView = findViewById(R.id.grid_recyclerview);
             recyclerView.setHasFixedSize(true);
-            LinearLayoutManager mLayoutManager;
             int orientation = getResources().getConfiguration().orientation;
             if (orientation == 1) {
                 mLayoutManager = new GridLayoutManager(getApplicationContext(), 2, LinearLayoutManager.VERTICAL, false);
             } else {
                 mLayoutManager = new GridLayoutManager(getApplicationContext(), 4, LinearLayoutManager.VERTICAL, false);
             }
+            RecyclerViewAdapter adapter =
+                    new RecyclerViewAdapter(getApplicationContext(), posterPath, this);
             recyclerView.setLayoutManager(mLayoutManager);
-
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(getApplicationContext(), posterPath, this);
             recyclerView.setAdapter(adapter);
         } else {
             Log.e("MainActivity", "initView: NULL Poster Path!");
@@ -108,19 +110,19 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
         String updatedUrl;
         currentPage = 1;
-        String apiKey = "&api_key";
+        String apiKey = "&api_key=";
         String page = "?page=";
         String url = "https://api.themoviedb.org/3/movie/";
         if (category == null) {
             category = "popular";
         }
+        if (category == "popular") setTitle("Popular");
         updatedUrl = url + category + page + currentPage + apiKey;
         return updatedUrl;
     }
 
     @Override
     public void onListItemClick(int itemIndex) {
-
         index = itemIndex;
         MovieInformation movieInfo = movieList.get(index);
         Gson gson = new Gson();

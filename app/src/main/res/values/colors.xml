@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#212121</color>
-    <color name="colorPrimaryDark">#212121</color>
-    <color name="colorAccent">#212121</color>
+    <color name="colorPrimary">#9E9E9E</color>
+    <color name="colorPrimaryDark">#006064</color>
+    <color name="colorAccent">#607D8B</color>
     <color name="colorTextShadow">#000000</color>
     <color name="whiteColor">#FFFFFF</color>
+    <color name="detailTitleColor">#8888</color>
+    <color name="progressBarColor">#ECEFF1</color>
 </resources>

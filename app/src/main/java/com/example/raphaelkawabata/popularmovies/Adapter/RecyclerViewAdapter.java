@@ -1,4 +1,4 @@
-package com.example.raphaelkawabata.popularmovies;
+package com.example.raphaelkawabata.popularmovies.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +14,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.example.raphaelkawabata.popularmovies.R;
 
 import java.util.ArrayList;
 

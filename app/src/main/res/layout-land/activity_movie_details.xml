@@ -48,12 +48,29 @@
                     android:textColor="#FFFFFF"
                     android:textSize="36sp" />
 
-                <TextView
-                    android:id="@+id/tv_release_date"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:textSize="20sp" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_release_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="10"
+                        android:padding="8dp"
+                        android:textSize="20sp" />
+
+                    <android.support.design.widget.FloatingActionButton
+                        android:id="@+id/fab_favorite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|end|bottom"
+                        android:layout_weight="1"
+                        android:paddingTop="8dp"
+                        android:src="@mipmap/ic_favorite_white_24dp" />
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tv_rating"

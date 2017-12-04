@@ -51,4 +51,68 @@ public class InternetConnection extends MainActivity {
         } catch (Exception e) {
         }
     }
+
+    public void requestReviewJson(final Context context, String Movie_id) {
+        String reviewUrl = "http://api.themoviedb.org/3/movie/" + Movie_id + "/reviews?api_key=";
+        try {
+            RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, reviewUrl, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                if (mVolleyCallback != null) {
+                                    mVolleyCallback.onSuccess(response);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            if (mVolleyCallback != null) {
+                                mVolleyCallback.onFail("FAIL to request JSONObject!");
+                            }
+                        }
+                    });
+            requestQueue.add(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void requestTrailerJson(final Context context, String Movie_id) {
+        String reviewUrl = "http://api.themoviedb.org/3/movie/" + Movie_id + "/videos?api_key=";
+        try {
+            RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, reviewUrl, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                if (mVolleyCallback != null) {
+                                    mVolleyCallback.onSuccess(response);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            if (mVolleyCallback != null) {
+                                mVolleyCallback.onFail("FAIL to request JSONObject!");
+                            }
+                        }
+                    });
+            requestQueue.add(request);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

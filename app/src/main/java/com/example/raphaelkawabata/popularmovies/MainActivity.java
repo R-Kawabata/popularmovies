@@ -34,11 +34,17 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     String completeUrlMainPage;
     VolleyInterface mVolleyCallback = null;
     InternetConnection mInternetConnection;
-    LinearLayoutManager mLayoutManager;
+    String savedUrlCategory = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            savedUrlCategory = savedInstanceState.getString("savedUrl");
+            completeUrlMainPage = updateUrl(savedUrlCategory, 1);
+        } else {
+            completeUrlMainPage = updateUrl(null, 1);
+        }
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         initVolleyCallback();
         mInternetConnection = new InternetConnection(mVolleyCallback, this);
@@ -88,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     private void initView(ArrayList<String> posterPath) {
 
         if (posterPath.get(0) != null) {
+            LinearLayoutManager mLayoutManager;
             posterPathList.addAll(posterPath);
             RecyclerView recyclerView = findViewById(R.id.grid_recyclerview);
             recyclerView.setHasFixedSize(true);
@@ -116,8 +123,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         if (category == null) {
             category = "popular";
         }
-        if (category == "popular") setTitle("Popular");
+        if (category == "popular") {
+            setTitle("Popular");
+        } else if (category == "top_hated") {
+            setTitle("Top Rated");
+        }
         updatedUrl = url + category + page + currentPage + apiKey;
+        savedUrlCategory = category;
         return updatedUrl;
     }
 
@@ -162,5 +174,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
             }
         };
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("savedUrl", savedUrlCategory);
     }
 }

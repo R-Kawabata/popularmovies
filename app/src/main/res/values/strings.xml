@@ -5,6 +5,4 @@
     <string name="favorite_movie">Favorite</string>
     <string name="review_list">Review</string>
     <string name="trailer_list">Trailer</string>
-    <string name="empty_review_list">There is no Review</string>
-    <string name="empty_string"> </string>
 </resources>

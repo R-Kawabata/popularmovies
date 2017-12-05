@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
@@ -170,7 +169,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
     }
 
     void initReviewList(List<Review> reviewList) {
-        LinearLayoutManager linearLayoutManager = new GridLayoutManager(this, 1, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         ReviewAdapter reviewAdapter = new ReviewAdapter(reviewList);
         detailsBinding.rvReviewList.setNestedScrollingEnabled(false);
         detailsBinding.rvReviewList.setLayoutManager(linearLayoutManager);
@@ -188,7 +187,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements TrailerAd
     }
 
     void initTrailerList(List<Trailer> trailers) {
-        LinearLayoutManager linearLayoutManager = new GridLayoutManager(this, 1, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         TrailerAdapter trailerAdapter = new TrailerAdapter(this, trailers);
         detailsBinding.rvTrailerList.setNestedScrollingEnabled(false);
         detailsBinding.rvTrailerList.setLayoutManager(linearLayoutManager);

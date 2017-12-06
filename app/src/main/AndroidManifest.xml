@@ -23,7 +23,7 @@
         </activity>
         <activity
             android:name=".MovieDetailsActivity"
-            android:label="Movie Detail"
+            android:label="@string/trailer_list"
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="adjustUnspecified|adjustPan">
             <meta-data
@@ -34,7 +34,6 @@
             android:name=".FavoriteMovieActivity"
             android:label="@string/favorite_movie"
             android:parentActivityName=".MainActivity"></activity>
-
         <provider
             android:name=".Data.FavoriteContentProvider"
             android:authorities="com.example.raphaelkawabata.popularmovies"

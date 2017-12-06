@@ -3,10 +3,8 @@ package com.example.raphaelkawabata.popularmovies.Data;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.example.raphaelkawabata.popularmovies.Models.MovieInformation;
 
@@ -48,7 +46,6 @@ public class FavoriteDbHelper extends SQLiteOpenHelper {
     }
 
     public long addFavoriteMovie(MovieInformation movieInformation) {
-        Log.d("test", "addFavoriteMovie: ADD " + movieInformation.getOriginalTitle());
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(FavoritedMovieContract.FavoritesEntry.COLUMN_MOVIE, movieInformation.getId());
@@ -60,31 +57,6 @@ public class FavoriteDbHelper extends SQLiteOpenHelper {
         long row = db.insertWithOnConflict(FavoritedMovieContract.FavoritesEntry.TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
         db.close();
         return row;
-    }
-
-    public MovieInformation getFavoriteMovie(int id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor =
-                db.query(FavoritedMovieContract.FavoritesEntry.TABLE_NAME,
-                        FavoritedMovieContract.FavoritesEntry.COLUMNS,
-                        " id = ? ",
-                        new String[]{String.valueOf(id)},
-                        null,
-                        null,
-                        null,
-                        null);
-        if (cursor != null) {
-            cursor.moveToFirst();
-        }
-
-        MovieInformation movieInformation = new MovieInformation();
-        movieInformation.setId(cursor.getString(1));
-        movieInformation.setVoteAverage(cursor.getString(2));
-        movieInformation.setTitle(cursor.getString(3));
-        movieInformation.setOverview(cursor.getString(4));
-        movieInformation.setBackdropPath(cursor.getString(5));
-        movieInformation.setReleaseDate(cursor.getString(6));
-        return movieInformation;
     }
 
     public List<MovieInformation> getAllFavorite() {
@@ -105,10 +77,8 @@ public class FavoriteDbHelper extends SQLiteOpenHelper {
                 movieInformation.setBackdropPath(cursor.getString(5));
                 movieInformation.setReleaseDate(cursor.getString(6));
                 movieInformationList.add(movieInformation);
-                Log.d("test", "getAllFavorite: " + movieInformationList.get(cursor.getPosition()).getTitle());
             } while (cursor.moveToNext());
         }
-//        Log.d("test", "getAllFavorite: " + movieInformationList.get().getTitle());
         return movieInformationList;
     }
 
@@ -118,19 +88,5 @@ public class FavoriteDbHelper extends SQLiteOpenHelper {
                 FavoritedMovieContract.FavoritesEntry.COLUMN_MOVIE + " = ?",
                 new String[]{String.valueOf(movieInformation.getId())});
         db.close();
-    }
-
-    public long getCountRow() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        long count = DatabaseUtils.queryNumEntries(db, FavoritedMovieContract.FavoritesEntry.TABLE_NAME);
-        db.close();
-        return count;
-    }
-
-    public Cursor initCursor() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM " + FavoritedMovieContract.FavoritesEntry.TABLE_NAME;
-        Cursor cursor = db.rawQuery(query, null);
-        return cursor;
     }
 }

@@ -8,14 +8,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.raphaelkawabata.popularmovies.BuildConfig;
 import com.example.raphaelkawabata.popularmovies.MainActivity;
 import com.example.raphaelkawabata.popularmovies.VolleyInterface;
 
 import org.json.JSONObject;
 
 public class InternetConnection extends MainActivity {
+
     VolleyInterface mVolleyCallback = null;
     Context mContext;
+    String apikey = BuildConfig.TMDB_KEY;
 
     public InternetConnection(VolleyInterface volleyCallback, Context context) {
         mVolleyCallback = volleyCallback;
@@ -49,11 +52,12 @@ public class InternetConnection extends MainActivity {
                     });
             requestQueue.add(request);
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     public void requestReviewJson(final Context context, String Movie_id) {
-        String reviewUrl = "http://api.themoviedb.org/3/movie/" + Movie_id + "/reviews?api_key=";
+        String reviewUrl = "http://api.themoviedb.org/3/movie/" + Movie_id + "/reviews?api_key=" + apikey;
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(context);
 
@@ -85,7 +89,7 @@ public class InternetConnection extends MainActivity {
     }
 
     public void requestTrailerJson(final Context context, String Movie_id) {
-        String reviewUrl = "http://api.themoviedb.org/3/movie/" + Movie_id + "/videos?api_key=";
+        String reviewUrl = "http://api.themoviedb.org/3/movie/" + Movie_id + "/videos?api_key=" + apikey;
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(context);
 

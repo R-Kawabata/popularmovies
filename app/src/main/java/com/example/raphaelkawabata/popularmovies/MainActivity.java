@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -94,18 +94,20 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     private void initView(ArrayList<String> posterPath) {
 
         if (posterPath.get(0) != null) {
-            LinearLayoutManager mLayoutManager;
+            StaggeredGridLayoutManager mLayoutManager;
             posterPathList.addAll(posterPath);
             RecyclerView recyclerView = findViewById(R.id.grid_recyclerview);
             recyclerView.setHasFixedSize(true);
-            int orientation = getResources().getConfiguration().orientation;
-            if (orientation == 1) {
-                mLayoutManager = new GridLayoutManager(getApplicationContext(), 2, LinearLayoutManager.VERTICAL, false);
-            } else {
-                mLayoutManager = new GridLayoutManager(getApplicationContext(), 4, LinearLayoutManager.VERTICAL, false);
-            }
             RecyclerViewAdapter adapter =
                     new RecyclerViewAdapter(getApplicationContext(), posterPath, this);
+            int orientation = getResources().getConfiguration().orientation;
+            if (orientation == 1) {
+                mLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
+                mLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+            } else {
+                mLayoutManager = new StaggeredGridLayoutManager(4, LinearLayoutManager.VERTICAL);
+                mLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+            }
             recyclerView.setLayoutManager(mLayoutManager);
             recyclerView.setAdapter(adapter);
         } else {
@@ -117,15 +119,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
 
         String updatedUrl;
         currentPage = 1;
-        String apiKey = "&api_key=";
+        String apiKey = "&api_key=" + BuildConfig.TMDB_KEY;
         String page = "?page=";
         String url = "https://api.themoviedb.org/3/movie/";
         if (category == null) {
             category = "popular";
         }
-        if (category == "popular") {
+        if (category.equals("popular")) {
             setTitle("Popular");
-        } else if (category == "top_hated") {
+        } else if (category.equals("top_hated")) {
             setTitle("Top Rated");
         }
         updatedUrl = url + category + page + currentPage + apiKey;

@@ -41,7 +41,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
 
     public class FavoriteHolder extends RecyclerView.ViewHolder {
 
-        public TextView favoriteMovieTitle;
+        public final TextView favoriteMovieTitle;
 
         public FavoriteHolder(View itemView) {
             super(itemView);

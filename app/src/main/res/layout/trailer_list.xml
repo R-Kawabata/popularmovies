@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:backgroundTint="@color/colorPrimary"
     android:clickable="true"
+    android:focusable="true"
     android:orientation="horizontal"
     android:padding="8dp">
 

@@ -4,14 +4,15 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.raphaelkawabata.popularmovies.Adapter.RecyclerViewAdapter;
+import com.example.raphaelkawabata.popularmovies.Data.FavoriteDbHelper;
 import com.example.raphaelkawabata.popularmovies.Models.MovieInformation;
 import com.example.raphaelkawabata.popularmovies.Network.InternetConnection;
 import com.example.raphaelkawabata.popularmovies.databinding.ActivityMainBinding;
@@ -26,15 +27,17 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RecyclerViewAdapter.ListItemCLickListener {
 
-    public List<MovieInformation> movieList = new ArrayList<>(20);
+    public List<MovieInformation> movieList = new ArrayList<>();
     public ArrayList<String> posterPathList = new ArrayList<>();
     public int currentPage = 1;
     public int index = 0;
+    public FavoriteDbHelper dbHelper;
     ActivityMainBinding binding;
     String completeUrlMainPage;
     VolleyInterface mVolleyCallback = null;
     InternetConnection mInternetConnection;
-    String savedUrlCategory = null;
+    private String savedUrlCategory = null;
+    private boolean menuFavoriteTab = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         initVolleyCallback();
         mInternetConnection = new InternetConnection(mVolleyCallback, this);
         mInternetConnection.requestJsonObject(this, completeUrlMainPage);
+        dbHelper = new FavoriteDbHelper(this);
+        dbHelper.getReadableDatabase();
     }
 
     @Override
@@ -70,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
             posterPathList.clear();
             mInternetConnection = new InternetConnection(mVolleyCallback, this);
             mInternetConnection.requestJsonObject(this, completeUrlMainPage);
+            menuFavoriteTab = false;
             setTitle("Popular");
             return true;
         } else if (itemSelected == R.id.sort_top_rated) {
@@ -80,12 +86,15 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
             posterPathList.clear();
             mInternetConnection = new InternetConnection(mVolleyCallback, this);
             mInternetConnection.requestJsonObject(this, completeUrlMainPage);
+            menuFavoriteTab = false;
             setTitle("Top Rated");
             return true;
         } else if (itemSelected == R.id.favorite_movie) {
-            Intent intentStartFavoriteActivity = new Intent(this, FavoriteMovieActivity.class);
-            startActivity(intentStartFavoriteActivity);
-
+            movieList.clear();
+            posterPathList.clear();
+            showFavorites();
+            menuFavoriteTab = true;
+            setTitle("Favorites");
         }
 
         return super.onOptionsItemSelected(item);
@@ -94,22 +103,23 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
     private void initView(ArrayList<String> posterPath) {
 
         if (posterPath.get(0) != null) {
-            StaggeredGridLayoutManager mLayoutManager;
+            GridLayoutManager mLayoutManager;
             posterPathList.addAll(posterPath);
-            RecyclerView recyclerView = findViewById(R.id.grid_recyclerview);
-            recyclerView.setHasFixedSize(true);
+            binding.gridRecyclerview.setHasFixedSize(true);
             RecyclerViewAdapter adapter =
                     new RecyclerViewAdapter(getApplicationContext(), posterPath, this);
             int orientation = getResources().getConfiguration().orientation;
             if (orientation == 1) {
-                mLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
-                mLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+                mLayoutManager = new GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false);
             } else {
-                mLayoutManager = new StaggeredGridLayoutManager(4, LinearLayoutManager.VERTICAL);
-                mLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+                mLayoutManager = new GridLayoutManager(this, 4, LinearLayoutManager.VERTICAL, false);
             }
-            recyclerView.setLayoutManager(mLayoutManager);
-            recyclerView.setAdapter(adapter);
+            binding.gridRecyclerview.setLayoutManager(mLayoutManager);
+            binding.gridRecyclerview.setItemViewCacheSize(20);
+            binding.gridRecyclerview.setDrawingCacheEnabled(true);
+            binding.gridRecyclerview.setHasFixedSize(true);
+            binding.gridRecyclerview.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+            binding.gridRecyclerview.setAdapter(adapter);
         } else {
             Log.e("MainActivity", "initView: NULL Poster Path!");
         }
@@ -121,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         currentPage = 1;
         String apiKey = "&api_key=" + BuildConfig.TMDB_KEY;
         String page = "?page=";
-        String url = "https://api.themoviedb.org/3/movie/";
+        String url = getResources().getString(R.string.default_url);
         if (category == null) {
             category = "popular";
         }
@@ -141,9 +151,16 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         MovieInformation movieInfo = movieList.get(index);
         Gson gson = new Gson();
         String jsonMovieInfo = gson.toJson(movieInfo);
-        Intent intentStartMovieDetailActivity = new Intent(MainActivity.this, MovieDetailsActivity.class);
-        intentStartMovieDetailActivity.putExtra(Intent.EXTRA_TEXT, jsonMovieInfo);
-        startActivity(intentStartMovieDetailActivity);
+        if (menuFavoriteTab) {
+            Intent intentStartFavoriteMovieActivity = new Intent(MainActivity.this, FavoriteMovieActivity.class);
+            Log.d("test", "onListItemClick: " + itemIndex);
+            intentStartFavoriteMovieActivity.putExtra("clicked_index", itemIndex);
+            startActivity(intentStartFavoriteMovieActivity);
+        } else {
+            Intent intentStartMovieDetailActivity = new Intent(MainActivity.this, MovieDetailsActivity.class);
+            intentStartMovieDetailActivity.putExtra(Intent.EXTRA_TEXT, jsonMovieInfo);
+            startActivity(intentStartMovieDetailActivity);
+        }
     }
 
     void initVolleyCallback() {
@@ -183,4 +200,30 @@ public class MainActivity extends AppCompatActivity implements RecyclerViewAdapt
         super.onSaveInstanceState(outState);
         outState.putString("savedUrl", savedUrlCategory);
     }
+
+    public void showFavorites() {
+        GridLayoutManager mLayoutManager;
+        movieList.addAll(dbHelper.getAllFavorite());
+        for (int i = 0; i < movieList.size(); i++) {
+            posterPathList.add(movieList.get(i).getPosterPath());
+        }
+
+        RecyclerViewAdapter adapter =
+                new RecyclerViewAdapter(getApplicationContext(), posterPathList, this);
+
+        int orientation = getResources().getConfiguration().orientation;
+
+        if (orientation == 1) {
+            mLayoutManager = new GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false);
+        } else {
+            mLayoutManager = new GridLayoutManager(this, 4, LinearLayoutManager.VERTICAL, false);
+        }
+        binding.gridRecyclerview.setLayoutManager(mLayoutManager);
+        binding.gridRecyclerview.setItemViewCacheSize(20);
+        binding.gridRecyclerview.setDrawingCacheEnabled(true);
+        binding.gridRecyclerview.setHasFixedSize(true);
+        binding.gridRecyclerview.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+        binding.gridRecyclerview.setAdapter(adapter);
+    }
+
 }

@@ -3,18 +3,124 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <ScrollView
-        android:id="@+id/sv_favorite"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:context="com.example.raphaelkawabata.popularmovies.MovieDetailsActivity">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_favorite"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:itemlist="@layout/favorite_list">
+            android:orientation="vertical">
 
-        </android.support.v7.widget.RecyclerView>
+            <ProgressBar
+                android:id="@+id/pg_movie_detail"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:foregroundGravity="center" />
+
+            <FrameLayout
+                android:id="@+id/framelayout_poster_title_favorite"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_movie_detail_poster"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|top"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter" />
+
+                <TextView
+                    android:id="@+id/tv_md_title_favorite"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|left"
+                    android:background="@color/detailTitleColor"
+                    android:padding="16dp"
+                    android:shadowColor="@color/colorTextShadow"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="2"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="36sp" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="9"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_release_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="10"
+                        android:padding="8dp"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/tv_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:textSize="30sp" />
+
+                    <RatingBar
+                        android:id="@+id/rating_bar"
+                        style="?android:attr/ratingBarStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:isIndicator="true"
+                        android:max="10"
+                        android:numStars="10"
+                        android:padding="8dp"
+                        android:rating="1"
+                        android:stepSize="0.1"
+                        android:theme="@style/RatingBar" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/divider" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:text="@string/movie_overview"
+                android:textSize="24sp"
+                android:textStyle="bold|italic" />
+
+            <TextView
+                android:id="@+id/tv_md_overview_favorite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/divider" />
+
+        </LinearLayout>
 
     </ScrollView>
+
 </layout>

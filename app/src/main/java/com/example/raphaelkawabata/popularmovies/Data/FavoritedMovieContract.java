@@ -21,10 +21,11 @@ public class FavoritedMovieContract {
         public static final String COLUMN_VOTE_AVERAGE = "voteAverage";
         public static final String COLUMN_TITLE = "original_title";
         public static final String COLUMN_OVERVIEW = "overview";
-        public static final String COLUMN_BACKDROP = "backdrop_path";
+        public static final String COLUMN_POSTER_PATH = "poster_Path";
+        public static final String COLUMN_BACKDROP_PATH = "backdrop_Path";
         public static final String COLUMN_RELEASE_DATE = "releaseDate";
         public static final String[] COLUMNS = {COLUMN_MOVIE, COLUMN_VOTE_AVERAGE,
-                COLUMN_TITLE, COLUMN_OVERVIEW, COLUMN_BACKDROP, COLUMN_RELEASE_DATE};
+                COLUMN_TITLE, COLUMN_OVERVIEW, COLUMN_POSTER_PATH, COLUMN_BACKDROP_PATH, COLUMN_RELEASE_DATE};
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIE).build();

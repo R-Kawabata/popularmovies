@@ -1,8 +1,11 @@
 <resources>
     <string name="app_name">popularmovies</string>
     <string name="sort_order_popular">Popular</string>
-    <string name="sort_order_top_rated">Top-rated</string>
+    <string name="sort_order_top_rated">Top Rated</string>
+    <string name="movie_detail">Movie Details</string>
     <string name="favorite_movie">Favorite</string>
     <string name="review_list">Review</string>
     <string name="trailer_list">Trailer</string>
+    <string name="default_url">http://api.themoviedb.org/3/movie/</string>
+    <string name="movie_overview">Overview</string>
 </resources>

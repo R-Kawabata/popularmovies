@@ -18,7 +18,7 @@ import java.util.List;
 public class FavoriteDbHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "favorite.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 5;
 
     public FavoriteDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -33,7 +33,8 @@ public class FavoriteDbHelper extends SQLiteOpenHelper {
                         FavoritedMovieContract.FavoritesEntry.COLUMN_VOTE_AVERAGE + " TEXT NOT NULL, " +
                         FavoritedMovieContract.FavoritesEntry.COLUMN_TITLE + " TEXT NOT NULL, " +
                         FavoritedMovieContract.FavoritesEntry.COLUMN_OVERVIEW + " TEXT NOT NULL," +
-                        FavoritedMovieContract.FavoritesEntry.COLUMN_BACKDROP + " TEXT NOT NULL, " +
+                        FavoritedMovieContract.FavoritesEntry.COLUMN_POSTER_PATH + " TEXT NOT NULL, " +
+                        FavoritedMovieContract.FavoritesEntry.COLUMN_BACKDROP_PATH + " TEXT NOT NULL, " +
                         FavoritedMovieContract.FavoritesEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL, " +
                         "UNIQUE (" + FavoritedMovieContract.FavoritesEntry.COLUMN_MOVIE + ") ON CONFLICT IGNORE);";
         db.execSQL(SQL_CREATE_MOVIE_TABLE);
@@ -52,7 +53,8 @@ public class FavoriteDbHelper extends SQLiteOpenHelper {
         contentValues.put(FavoritedMovieContract.FavoritesEntry.COLUMN_VOTE_AVERAGE, movieInformation.getVoteAverage());
         contentValues.put(FavoritedMovieContract.FavoritesEntry.COLUMN_TITLE, movieInformation.getOriginalTitle());
         contentValues.put(FavoritedMovieContract.FavoritesEntry.COLUMN_OVERVIEW, movieInformation.getOverview());
-        contentValues.put(FavoritedMovieContract.FavoritesEntry.COLUMN_BACKDROP, movieInformation.getBackdropPath());
+        contentValues.put(FavoritedMovieContract.FavoritesEntry.COLUMN_POSTER_PATH, movieInformation.getPosterPath());
+        contentValues.put(FavoritedMovieContract.FavoritesEntry.COLUMN_BACKDROP_PATH, movieInformation.getBackdropPath());
         contentValues.put(FavoritedMovieContract.FavoritesEntry.COLUMN_RELEASE_DATE, movieInformation.getReleaseDate());
         long row = db.insertWithOnConflict(FavoritedMovieContract.FavoritesEntry.TABLE_NAME, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
         db.close();
@@ -74,8 +76,9 @@ public class FavoriteDbHelper extends SQLiteOpenHelper {
                 movieInformation.setVoteAverage(cursor.getString(2));
                 movieInformation.setTitle(cursor.getString(3));
                 movieInformation.setOverview(cursor.getString(4));
-                movieInformation.setBackdropPath(cursor.getString(5));
-                movieInformation.setReleaseDate(cursor.getString(6));
+                movieInformation.setPosterPath(cursor.getString(5));
+                movieInformation.setBackdropPath(cursor.getString(6));
+                movieInformation.setReleaseDate(cursor.getString(7));
                 movieInformationList.add(movieInformation);
             } while (cursor.moveToNext());
         }

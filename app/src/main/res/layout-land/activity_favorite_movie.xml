@@ -35,17 +35,17 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_md_title"
+                    android:id="@+id/tv_md_title_favorite"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|left"
-                    android:background="#8888"
-                    android:padding="14dp"
-                    android:shadowColor="#000000"
+                    android:background="@color/detailTitleColor"
+                    android:padding="16dp"
+                    android:shadowColor="@color/colorTextShadow"
                     android:shadowDx="1"
                     android:shadowDy="1"
                     android:shadowRadius="2"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/whiteColor"
                     android:textSize="36sp" />
 
                 <LinearLayout
@@ -59,15 +59,6 @@
                         android:layout_height="wrap_content"
                         android:padding="8dp"
                         android:textSize="20sp" />
-
-                    <android.support.design.widget.FloatingActionButton
-                        android:id="@+id/fab_favorite"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right|end|bottom"
-                        android:paddingTop="8dp"
-                        android:src="@mipmap/ic_favorite_white_24dp"
-                        app:backgroundTint="@color/red" />
 
                 </LinearLayout>
 
@@ -107,7 +98,7 @@
                     android:textStyle="bold|italic" />
 
                 <TextView
-                    android:id="@+id/tv_md_overview"
+                    android:id="@+id/tv_md_overview_favorite"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
@@ -118,35 +109,6 @@
                     android:layout_height="1px"
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/divider" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:text="@string/trailer_list"
-                    android:textSize="24sp"
-                    android:textStyle="bold|italic" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_trailer_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:itemlist="@layout/trailer_list" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="8dp"
-                    android:text="@string/review_list"
-                    android:textSize="24sp"
-                    android:textStyle="bold|italic" />
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_review_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:itemlist="@layout/review_list" />
 
             </LinearLayout>
 

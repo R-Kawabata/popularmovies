@@ -7,4 +7,5 @@
     <color name="whiteColor">#FFFFFF</color>
     <color name="detailTitleColor">#8888</color>
     <color name="progressBarColor">#ECEFF1</color>
+    <color name="red">#F44336</color>
 </resources>
